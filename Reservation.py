@@ -7,3 +7,5 @@ class Reservation:
         self.__client = client
         self.__room = room
         self.__status = status
+
+    
