@@ -50,6 +50,30 @@ class GuestHouse:
         def products(self, products: Product):
             self.__products = products
 
-        
+    def upload_data():
+        pass
+
+    def save_data():
+        pass
+    
+    def check_availability(self, reservations: Reservation, rooms: Room):
+        pass
+    
+    def check_reservation(self, reservations: Reservation, rooms: Room):
+        pass
+
+    def make_reservation(self, reservations: Reservation, rooms: Room):
+        pass
+
+    def  cancel_reservation(self, reservations: Reservation):
+        pass
+
+    def make_checkin(self, reservations: Reservation):
+        pass
+
+    def make_checkout(self, reservations: Reservation):
+        pass
+
+
 
         
