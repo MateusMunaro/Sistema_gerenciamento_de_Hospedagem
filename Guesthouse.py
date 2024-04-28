@@ -3,7 +3,7 @@ from Reservation import Reservation
 from Product import Product
 
 class GuestHouse:
-    def __init__(self, name: str, contact: str, rooms: Room, reservations: Reservation, products: Product):
+    def __init__(self, name: str, contact: str, rooms: list[Room], reservations: list[Reservation], products: list[Product]):
         self.__name = name
         self.__contact = contact
         self.__rooms = rooms
@@ -31,7 +31,7 @@ class GuestHouse:
         return self.__rooms
     
     @rooms.setter
-    def rooms(self, rooms: list):
+    def rooms(self, rooms: Room):
         self.__rooms = rooms
 
     @property
@@ -39,7 +39,7 @@ class GuestHouse:
         return self.__reservations
     
     @reservations.setter
-    def reservations(self, reservations: list):
+    def reservations(self, reservations: Reservation):
         self.__reservations = reservations
 
     @property
@@ -47,7 +47,7 @@ class GuestHouse:
         return self.__products
     
     @products.setter
-    def products(self, products: list):
+    def products(self, products: Product):
         self.__products = products
 
     def upload_data(self):
@@ -66,12 +66,15 @@ class GuestHouse:
     def check_reservation(self, reservation: Reservation):
         pass
 
-    def make_reservation(self, reservation: Reservation):
-        if self.check_availability(reservation.number, reservation.start_day, reservation.start_day):
-            self.__reservations.append(reservation)
-            print("Reservation made successfully.")
+    def make_reservation(self, reservation: Reservation, room: Room):
+        if self.check_availability(room.number, reservation.start_day, reservation.end_day):
+            if any(res.number == reservation.number for res in self.__reservations):
+                print("Número de reserva já está ocupado.")
+            else:
+                self.__reservations.append(reservation)
+                print("Reserva realizada com sucesso.")
         else:
-            print("Room is not available for the selected dates.")
+            print("Quarto não está disponível para as datas selecionadas.")
 
     def cancel_reservation(self, reservation: Reservation):
         pass
