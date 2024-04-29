@@ -2,8 +2,15 @@ from Room import Room
 from Reservation import Reservation
 from Product import Product
 
+
+
 class GuestHouse:
-    def __init__(self, name: str, contact: str, rooms: list[Room], reservations: list[Reservation], products: list[Product]):
+    def __init__(
+            self, name: str = "", 
+            contact: str = "", rooms: list[Room] = [],
+            reservations: list[Reservation] = [], 
+            products: list[Product] = []
+        ) -> None:
         self.__name = name
         self.__contact = contact
         self.__rooms = rooms
@@ -50,11 +57,46 @@ class GuestHouse:
     def products(self, products: Product):
         self.__products = products
 
+    def __iter__(self):
+        yield 'name', self.__name
+        yield 'contact', self.__contact
+        yield 'rooms', self.__rooms
+        yield 'reservations', self.__reservations
+        yield 'products', self.__products
+
     def upload_data(self):
-        pass
+        try:
+            with open("guesthouse.txt", "r") as file:
+                data = file.read()
+                data = eval(data)
+                self.__name = data["name"]
+                self.__contact = data["contact"]
+                self.__rooms = data["rooms"]
+                self.__reservations = data["reservations"]
+                self.__products = data["products"]
+        except FileNotFoundError:
+            print("Arquivo não encontrado.")
+        print("Arquivo carregado com sucesso!")
+
 
     def save_data(self):
-        pass
+        with open("guesthouse.txt", "w") as file:
+            data = dict(self)
+            file.write(data)
+        with open("products.txt", "w") as file:
+            for product in self.__products:
+                data = dict(product)
+                file.write(data)
+        with open("rooms.txt", "w") as file:
+            for room in self.__rooms:
+                data = dict(room)
+                file.write(data)
+        with open("reservations.txt", "w") as file:
+            for reservation in self.__reservations:
+                data = dict(reservation)
+                file.write(data)
+
+        print("Arquivo salvo com sucesso!")        
     
     def check_availability(self, number: int, start_day: int, end_day: int) -> bool:
         for reservation in self.__reservations:

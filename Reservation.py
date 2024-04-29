@@ -1,7 +1,7 @@
-import Room
+from room import Room
 
 class Reservation:
-    def __init__(self, start_day: int, end_day: int, client: str, room: Room, status: False) -> None:
+    def __init__(self, start_day: int, end_day: int, client: str, room: Room, status: bool = False) -> None:
         self.__start_day = start_day
         self.__end_day = end_day
         self.__client = client
@@ -48,6 +48,12 @@ class Reservation:
     def status(self, status: False):
         self.__status = status
 
+    def __iter__(self):
+        yield 'start_day', self.__start_day
+        yield 'end_day', self.__end_day
+        yield 'client', self.__client
+        yield 'room', self.__room
+        yield 'status', self.__status
     
 
     
