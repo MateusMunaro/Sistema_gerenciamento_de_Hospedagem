@@ -27,3 +27,6 @@ class Product:
     @price.setter
     def price(self, price: float):
         self.__price = price
+
+    def __repr__(self) -> str:
+        return f"Código: {self.__code} - Nome: {self.__name} - Preço: R$ {self.__price}"
