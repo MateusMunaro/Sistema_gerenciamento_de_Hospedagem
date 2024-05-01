@@ -48,4 +48,19 @@ class Room:
 
     def clear_consumption(self, consumption):
         self.__consumption = []
-        
+
+
+    def __str__(self) -> str:
+        return f"Código: {self.__number}, Categória: {self.__category}, Diário: R$ {self.__daily}, Consumo: {self.__consumption}"
+
+    def __repr__(self) -> str:
+        return f"Código: {self.__number}, Categória: {self.__category}, Diário: R$ {self.__daily}, Consumo: {self.__consumption}"
+
+    def __dict__(self):
+        return {'number': self.__number, 'category': self.__category, 'daily': self.__daily, 'consumption': self.__consumption}
+
+    def __iter__(self):
+        yield 'number', self.__number
+        yield 'category', self.__category
+        yield 'daily', self.__daily
+        yield 'consumption', self.__consumption

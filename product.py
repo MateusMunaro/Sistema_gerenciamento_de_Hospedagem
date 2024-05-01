@@ -30,3 +30,11 @@ class Product:
 
     def __repr__(self) -> str:
         return f"Código: {self.__code} - Nome: {self.__name} - Preço: R$ {self.__price}"
+    
+    def __dict__(self):
+        return {'code': self.__code, 'name': self.__name, 'price': self.__price}
+    
+    def __iter__(self):
+        yield 'code', self.__code
+        yield 'name', self.__name
+        yield 'price', self.__price

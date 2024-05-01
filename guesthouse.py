@@ -1,3 +1,6 @@
+import json
+
+from typing import List
 from datetime import date, datetime
 
 from room import Room
@@ -6,17 +9,18 @@ from product import Product
 
 class GuestHouse:
 
-    DIARY_COST = 200.50
+    DIARY_COST = 10.4
     
     def __init__(
-            self, name: str = "", 
-            contact: str = "", rooms: list[Room] = [],
-            reservations: list[Reservation] = [], 
-            products: list[Product] = []
+            self, name: str, 
+            contact: str, 
+            room: List[Room],
+            reservations: List[Reservation], 
+            products: List[Product]
         ) -> None:
         self.__name = name
         self.__contact = contact
-        self.__rooms = rooms
+        self.__rooms = room
         self.__reservations = reservations
         self.__products = products
 
@@ -67,44 +71,52 @@ class GuestHouse:
         yield 'reservations', self.__reservations
         yield 'products', self.__products
 
+    def __dict__(self):
+        return {
+            "name": self.__name,
+            "contact": self.__contact,
+            "rooms": [room.__dict__() for room in self.__rooms],
+            "reservations": [reservation.__dict__() for reservation in self.__reservations],
+            "products": [product.__dict__() for product in self.__products]
+        }
+
     def upload_data(self):
         try:
-            with open("guesthouse.txt", "r") as file:
-                data = file.read()
-                data = eval(data)
-                self.__name = data["name"]
-                self.__contact = data["contact"]
-                self.__rooms = data["rooms"]
-                self.__reservations = data["reservations"]
-                self.__products = data["products"]
+            with open("guesthouse.json", "r") as file:
+                print("Carregando arquivo...")
+            
+                data = json.loads(str(file.read()))
+                self.__name = data['name']
+                self.__contact = data['contact']
+                self.__rooms = [Room(**room) for room in data['rooms']]
+                self.__reservations = [
+                    Reservation(
+                        reservation_date_start=datetime.strptime(reservation['reservation_date_start'], "%Y-%m-%d").date(),
+                        reservation_date_end=datetime.strptime(reservation['reservation_date_end'], "%Y-%m-%d").date(), 
+                        client=reservation['client'],
+                        room=Room(**reservation['room']), 
+                        status=reservation['status']
+                    ) 
+                    for reservation in data['reservations']
+                ]
+                self.__products = [Product(**product) for product in data['products']]
+                print("Arquivo carregado com sucesso!")
+                    
+               
         except FileNotFoundError:
             print("Arquivo não encontrado.")
-        print("Arquivo carregado com sucesso!")
 
 
     def save_data(self):
-        with open("guesthouse.txt", "w") as file:
-            data = dict(self)
-            file.write(data)
-        with open("products.txt", "w") as file:
-            for product in self.__products:
-                data = dict(product)
-                file.write(data)
-        with open("rooms.txt", "w") as file:
-            for room in self.__rooms:
-                data = dict(room)
-                file.write(data)
-        with open("reservations.txt", "w") as file:
-            for reservation in self.__reservations:
-                data = dict(reservation)
-                file.write(data)
-
+        with open("guesthouse.json", "w") as file:
+            data = self.__dict__()
+            data = json.dump(data, file)    
         print("Arquivo salvo com sucesso!")        
     
     def check_availability(self, start_date: date, end_date: date, room_number: int ) -> bool:
         is_free = True        
         for reservation in self.__reservations:
-            if reservation.room.number != room_number and reservation.status != "I":
+            if reservation.room.number != room_number and reservation.status != "I" and reservation.status != "C":
                 if reservation.reservation_date_start != start_date and reservation.reservation_date_end != end_date:
                     return is_free
                 else:
@@ -126,13 +138,19 @@ class GuestHouse:
             reservation for reservation in self.__reservations
             if reservation.client == client_name and reservation.status == "I"
         ]
-                               
+
+
+    def find_room(self, room_number: int):
+        for room in self.__rooms:
+            if room.number == room_number:
+                return room                   
 
     def make_reservation(self, start_date: date, end_date: date, room_number: int, client_name: str):
         is_available = self.check_availability(start_date, end_date, room_number)
         if is_available:
-            reservation = Reservation(start_date, end_date, client_name, room_number)
-            self.__reservations.append(reservation)
+            room = self.find_room(room_number)
+            current_reservation = Reservation(start_date, end_date, client_name, room, "A")
+            self.__reservations.append(current_reservation)
             print("Reserva efetuada com sucesso!")
         else:
             print("Quarto não disponível!")
@@ -166,9 +184,10 @@ class GuestHouse:
                 current_date = datetime.now().date()
                 total_days = current_date - reservation.reservation_date_start
                 print("Dias decorridos: ", total_days.days)
-                total_costs = total_days.days * self.DIARY_COST + self.reservations.costs
+                total_costs = total_costs if total_costs != 0 * reservation.room.daily else + self.DIARY_COST * reservation.room.daily + 200
+                total_costs = total_days.days * reservation.room.daily + self.DIARY_COST + self.reservations.costs
                 print("Custo total: ", total_costs)
-                print("Custo por dia: ", self.DIARY_COST)
+                print("Custo por * reservation.room.daily dia: "+ self.DIARY_COST)
                 print("Custo por dia em produtos: ", self.reservations.costs)
 
                 reservation.status = "O"
