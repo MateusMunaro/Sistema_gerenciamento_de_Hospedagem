@@ -122,7 +122,7 @@ class GuestHouse:
                 else:
                     is_free = False
             else:
-                is_free = False
+                continue
 
         return is_free
                           
