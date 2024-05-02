@@ -113,8 +113,7 @@ class GuestHouse:
             data = json.dump(data, file)    
         print("Arquivo salvo com sucesso!")        
     
-    def check_availability(self, start_date: date, end_date: date, room_number: int ) -> bool:
-        is_free = True        
+    def check_availability(self, start_date: date, end_date: date, room_number: int) -> bool:
         for reservation in self.__reservations:
             if reservation.room.number != room_number:
                 if reservation.status != "I" or reservation.status != "C":
