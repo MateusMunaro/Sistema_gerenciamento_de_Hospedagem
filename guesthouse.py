@@ -116,9 +116,12 @@ class GuestHouse:
     def check_availability(self, start_date: date, end_date: date, room_number: int ) -> bool:
         is_free = True        
         for reservation in self.__reservations:
-            if reservation.room.number != room_number and reservation.status != "I" and reservation.status != "C":
-                if reservation.reservation_date_start != start_date and reservation.reservation_date_end != end_date:
-                    return is_free
+            if reservation.room.number != room_number:
+                if reservation.status != "I" or reservation.status != "C":
+                    if reservation.reservation_date_start != start_date and reservation.reservation_date_end != end_date:
+                        return is_free
+                    else:
+                        is_free = False
                 else:
                     is_free = False
             else:
