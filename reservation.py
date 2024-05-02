@@ -66,7 +66,7 @@ class Reservation:
         return sum([item.price for item in self.__consumption])
 
     def __dict__(self):
-        return {'reservation_date_start': str(self.__reservation_date_start.strftime("%Y-%m-%d")), 'reservation_date_end': str(self.__reservation_date_end.strftime("%Y-%m-%d")), 'client': self.__client, 'room': dict(self.__room), 'status': self.__status, 'consumption': self.__consumption}
+        return {'reservation_date_start': str(self.__reservation_date_start.strftime("%Y-%m-%d")), 'reservation_date_end': str(self.__reservation_date_end.strftime("%Y-%m-%d")), 'client': self.__client, 'room': dict(self.__room), 'status': self.__status, 'consumption': [dict(item) for item in self.__consumption]}
 
     def __repr__(self):
         return f"""Data de entrada : {self.__reservation_date_start.strftime("%Y-%m-%d")}, Data de saida : {self.__reservation_date_end.strftime("%Y-%m-%d")}, Cliente : {self.__client},Status : {self.__status}, Consumo : {self.__consumption}"""

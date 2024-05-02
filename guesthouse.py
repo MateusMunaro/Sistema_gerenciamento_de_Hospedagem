@@ -182,13 +182,12 @@ class GuestHouse:
                 remain_days = reservation.reservation_date_end - reservation.reservation_date_start
                 print("Dias restantes: ", remain_days.days)
                 current_date = datetime.now().date()
-                total_days = current_date - reservation.reservation_date_start
-                print("Dias decorridos: ", total_days.days)
-                total_costs = total_costs if total_costs != 0 * reservation.room.daily else + self.DIARY_COST * reservation.room.daily + 200
-                total_costs = total_days.days * reservation.room.daily + self.DIARY_COST + self.reservations.costs
+                total_days = current_date
+                print("Dias decorridos: ", total_days.day)
+                total_costs = total_days.day * reservation.room.daily + reservation.costs + self.DIARY_COST if total_days.day != 0 else + self.DIARY_COST * reservation.room.daily + 200
                 print("Custo total: ", total_costs)
-                print("Custo por * reservation.room.daily dia: "+ self.DIARY_COST)
-                print("Custo por dia em produtos: ", self.reservations.costs)
+                print("Custo por * reservation.room.daily dia: ", self.DIARY_COST)
+                print("Custo por dia em produtos: ", reservation.costs)
 
                 reservation.status = "O"
             print("Check-out efetuado com sucesso!")
@@ -196,7 +195,7 @@ class GuestHouse:
             print("Nenhuma reserva encontrada!")
 
     def register_consumption(self, client_name: str):
-        reservation = self.check_checkin(client_name)[0]
+        reservation = self.check_checkin(client_name)
         if len(reservation) != 0:
             print("Produtos disponíveis:")
             for product in self.__products:
@@ -207,7 +206,7 @@ class GuestHouse:
             for product in self.__products:
                 if product.code == product_code:
                     for i in range(quantity):
-                        reservation.consumption.append(product)
+                        reservation[0].consumption.append(product)
             print("Consumo efetuado com sucesso!")
         else:
             print("Nenhuma reserva encontrada!")

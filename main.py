@@ -45,7 +45,7 @@ def main():
     boss_reservation = Reservation( 
         datetime.strptime("2022-01-01", "%Y-%m-%d"), 
         datetime.strptime("2022-01-02", "%Y-%m-%d"),
-        "Boss", main_room, "O"
+        "Boss", main_room, "I"
     )
 
 
