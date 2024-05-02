@@ -189,7 +189,7 @@ class GuestHouse:
                 print("Dias decorridos: ", total_days.day)
                 total_costs = total_days.day * reservation.room.daily + reservation.costs + self.DIARY_COST if total_days.day != 0 else + self.DIARY_COST * reservation.room.daily + 200
                 print("Custo total: ", total_costs)
-                print("Custo por * reservation.room.daily dia: ", self.DIARY_COST)
+                print("Custo por dia: ", reservation.room.daily * total_days.day)
                 print("Custo por dia em produtos: ", reservation.costs)
 
                 reservation.status = "O"
