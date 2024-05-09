@@ -80,6 +80,7 @@ class GuestHouse:
             "products": [product.__dict__() for product in self.__products]
         }
 
+    #carrega informações do Json
     def upload_data(self):
         try:
             with open("guesthouse.json", "r") as file:
@@ -97,7 +98,7 @@ class GuestHouse:
                         room=Room(**reservation['room']), 
                         status=reservation['status']
                     ) 
-                    for reservation in data['reservations']
+                    for reservation in data['reservations']  
                 ]
                 self.__products = [Product(**product) for product in data['products']]
                 print("Arquivo carregado com sucesso!")
@@ -106,7 +107,7 @@ class GuestHouse:
         except FileNotFoundError:
             print("Arquivo não encontrado.")
 
-
+    #salva os dados em um arquivo tipo Json
     def save_data(self):
         with open("guesthouse.json", "w") as file:
             data = self.__dict__()
@@ -128,25 +129,25 @@ class GuestHouse:
 
         return is_free
                           
-    
+    #faz a verificação se existe uma reserva em um nome
     def check_reservation(self, client_name: str):
         return [
             reservation for reservation in self.__reservations
             if reservation.client == client_name 
         ]
-    
+    #verifica se esse nome ja fez checkin
     def check_checkin(self, client_name: str):
         return [
             reservation for reservation in self.__reservations
             if reservation.client == client_name and reservation.status == "I"
         ]
 
-
+    #faz a busca para ver se o quarto esta vago
     def find_room(self, room_number: int):
         for room in self.__rooms:
             if room.number == room_number:
                 return room                   
-
+    #faz a reserva e adiciona dentro da lista de reservas
     def make_reservation(self, start_date: date, end_date: date, room_number: int, client_name: str):
         is_available = self.check_availability(start_date, end_date, room_number)
         if is_available:
@@ -157,7 +158,7 @@ class GuestHouse:
         else:
             print("Quarto não disponível!")
 
-
+    #cancela a reserva feita
     def cancel_reservation(self, client_name: str):
         reservations = self.check_reservation(client_name)
         if len(reservations) != 0:
@@ -166,7 +167,7 @@ class GuestHouse:
             print("Reserva cancelada com sucesso!")
         else:
             print("Nenhuma reserva encontrada!")
-
+    #efetua o check-in mudando o status da reserva
     def make_checkin(self, client_name: str):
         reservations = self.check_reservation(client_name)
         if len(reservations) != 0:
@@ -176,6 +177,7 @@ class GuestHouse:
         else:
             print("Nenhuma reserva encontrada!")
 
+    #efetua o check-out mostrando todas as informações
     def make_checkout(self, client_name: str):
         reservations = self.check_reservation(client_name)
         if len(reservations) != 0:
@@ -195,7 +197,7 @@ class GuestHouse:
             print("Check-out efetuado com sucesso!")
         else:
             print("Nenhuma reserva encontrada!")
-
+    #faz a validação do consumo
     def register_consumption(self, client_name: str):
         reservation = self.check_checkin(client_name)
         if len(reservation) != 0:
